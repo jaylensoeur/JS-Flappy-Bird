@@ -1,13 +1,11 @@
-#canvas
-{
-    background-color:#30c0df;
-    border: 2px solid black;
-    display: block;
-    margin: auto;
-    padding: auto;
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
 
-  transform: scale(1.5); /* Scales 1.2x without pixel distortion */
-  transform-origin: top left;
-
-    
+canvas {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
 }

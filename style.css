@@ -6,7 +6,7 @@
     margin: auto;
     padding: auto;
 
-  transform: scale(1.2); /* Scales 1.2x without pixel distortion */
+  transform: scale(2); /* Scales 1.2x without pixel distortion */
   transform-origin: center; /* Keeps scaling centered */
 
     

@@ -6,8 +6,8 @@
     margin: auto;
     padding: auto;
 
-  transform: scale(2); /* Scales 1.2x without pixel distortion */
-  transform-origin: center; /* Keeps scaling centered */
+  transform: scale(1.5); /* Scales 1.2x without pixel distortion */
+  transform-origin: top left;
 
     
 }

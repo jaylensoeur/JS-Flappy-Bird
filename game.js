@@ -241,6 +241,7 @@ const bird = {
 const UI = {
   getReady: { sprite: new Image() },
   gameOver: { sprite: new Image() },
+  shareButton: { sprite: new Image() },
   tap: [{ sprite: new Image() }, { sprite: new Image() }],
   score: {
     curr: 0,
@@ -272,18 +273,15 @@ const UI = {
         sctx.drawImage(this.tap[this.frame].sprite, this.tx, this.ty);
 
         // Draw Share Button
-        let shareBtnX = scrn.width / 2 - 50; // Centered horizontally
-        let shareBtnY = scrn.height / 2 + 150; // Below game over message
-        let shareBtnW = 100;
-        let shareBtnH = 40;
+        let shareBtnX = parseFloat(scrn.width - (this.shareButton.sprite.width - 50)) / 2;
+        let shareBtnY = parseFloat(scrn.width - this.shareButton.sprite.height) / 2 - 50;
+        let shareBtnW = this.shareButton.sprite.width - 50;
+        let shareBtnH = this.shareButton.sprite.height;
 
-        sctx.fillStyle = "#4285F4"; // Blue button
-        sctx.fillRect(shareBtnX, shareBtnY, shareBtnW, shareBtnH);
-        sctx.fillStyle = "#FFFFFF";
-        sctx.font = "16px Arial";
-        sctx.fillText("Share", shareBtnX + 25, shareBtnY + 25);
 
         // Store button area for click detection
+        sctx.drawImage(this.shareButton.sprite, shareBtnX, shareBtnY, shareBtnW, shareBtnH);
+
         this.shareBtn = { x: shareBtnX, y: shareBtnY, w: shareBtnW, h: shareBtnH };
         break;
     }
@@ -334,6 +332,7 @@ bg.sprite.src = "img/BG.png";
 pipe.top.sprite.src = "img/toppipe.png";
 pipe.bot.sprite.src = "img/botpipe.png";
 UI.gameOver.sprite.src = "img/go.png";
+UI.shareButton.sprite.src = "img/sharebtn.png";
 UI.getReady.sprite.src = "img/getready.png";
 UI.tap[0].sprite.src = "img/tap/t0.png";
 UI.tap[1].sprite.src = "img/tap/t1.png";

@@ -2,7 +2,14 @@ const RAD = Math.PI / 180;
 const scrn = document.getElementById("canvas");
 const sctx = scrn.getContext("2d");
 scrn.tabIndex = 1;
-scrn.addEventListener("click", () => {
+scrn.addEventListener("click", (e) => {
+  let rect = scrn.getBoundingClientRect();
+  let scaleX = scrn.width / rect.width;  // Normalize click position
+  let scaleY = scrn.height / rect.height;
+
+  let clickX = (e.clientX - rect.left) * scaleX;
+  let clickY = (e.clientY - rect.top) * scaleY;
+
   switch (state.curr) {
     case state.getReady:
       state.curr = state.Play;
@@ -12,13 +19,22 @@ scrn.addEventListener("click", () => {
       bird.flap();
       break;
     case state.gameOver:
-      state.curr = state.getReady;
-      bird.speed = 0;
-      bird.y = 100;
-      pipe.pipes = [];
-      UI.score.curr = 0;
-      SFX.played = false;
-      break;
+        if (
+            clickX >= UI.shareBtn.x &&
+            clickX <= UI.shareBtn.x + UI.shareBtn.w &&
+            clickY >= UI.shareBtn.y &&
+            clickY <= UI.shareBtn.y + UI.shareBtn.h
+        ) {
+            share(); // Call capture function for sharing
+        } else {
+          state.curr = state.getReady;
+          bird.speed = 0;
+          bird.y = 100;
+          pipe.pipes = [];
+          UI.score.curr = 0;
+          SFX.played = false;
+          break;
+        }
   }
 });
 
@@ -147,11 +163,17 @@ const bird = {
     switch (state.curr) {
       case state.getReady:
         this.rotatation = 0;
-        this.y += frames % 10 == 0 ? Math.sin(frames * RAD) : 0;
-        this.frame += frames % 10 == 0 ? 1 : 0;
+        if (frames % 10 === 0) {
+          this.y += Math.sin(frames * RAD);
+          // Cycle only indices 0 and 1:
+          this.frame = (this.frame + 1) % 2;
+        }
         break;
       case state.Play:
-        this.frame += frames % 5 == 0 ? 1 : 0;
+        if (frames % 5 === 0) {
+          // Again, cycle only 0..1
+          this.frame = (this.frame + 1) % 2;
+        }
         this.y += this.speed;
         this.setRotation();
         this.speed += this.gravity;
@@ -161,7 +183,7 @@ const bird = {
 
         break;
       case state.gameOver:
-        this.frame = 1;
+        this.frame = 2;
         if (this.y + r < gnd.y) {
           this.y += this.speed;
           this.setRotation();
@@ -235,19 +257,34 @@ const UI = {
         this.y = parseFloat(scrn.height - this.getReady.sprite.height) / 2;
         this.x = parseFloat(scrn.width - this.getReady.sprite.width) / 2;
         this.tx = parseFloat(scrn.width - this.tap[0].sprite.width) / 2;
-        this.ty =
-          this.y + this.getReady.sprite.height - this.tap[0].sprite.height;
+        this.ty = this.y + this.getReady.sprite.height - this.tap[0].sprite.height;
         sctx.drawImage(this.getReady.sprite, this.x, this.y);
         sctx.drawImage(this.tap[this.frame].sprite, this.tx, this.ty);
         break;
+
       case state.gameOver:
         this.y = parseFloat(scrn.height - this.gameOver.sprite.height) / 2;
         this.x = parseFloat(scrn.width - this.gameOver.sprite.width) / 2;
         this.tx = parseFloat(scrn.width - this.tap[0].sprite.width) / 2;
-        this.ty =
-          this.y + this.gameOver.sprite.height - this.tap[0].sprite.height;
+        this.ty = this.y + this.gameOver.sprite.height - this.tap[0].sprite.height;
+
         sctx.drawImage(this.gameOver.sprite, this.x, this.y);
         sctx.drawImage(this.tap[this.frame].sprite, this.tx, this.ty);
+
+        // Draw Share Button
+        let shareBtnX = scrn.width / 2 - 50; // Centered horizontally
+        let shareBtnY = scrn.height / 2 + 150; // Below game over message
+        let shareBtnW = 100;
+        let shareBtnH = 40;
+
+        sctx.fillStyle = "#4285F4"; // Blue button
+        sctx.fillRect(shareBtnX, shareBtnY, shareBtnW, shareBtnH);
+        sctx.fillStyle = "#FFFFFF";
+        sctx.font = "16px Arial";
+        sctx.fillText("Share", shareBtnX + 25, shareBtnY + 25);
+
+        // Store button area for click detection
+        this.shareBtn = { x: shareBtnX, y: shareBtnY, w: shareBtnW, h: shareBtnH };
         break;
     }
     this.drawScore();
@@ -324,7 +361,7 @@ function update() {
 }
 
 function draw() {
-  sctx.fillStyle = "#30c0df";
+  sctx.fillStyle = "#EDEDED";
   sctx.fillRect(0, 0, scrn.width, scrn.height);
   bg.draw();
   pipe.draw();
@@ -335,3 +372,7 @@ function draw() {
 }
 
 setInterval(gameLoop, 20);
+
+function share() {
+  alert("sharing")
+}

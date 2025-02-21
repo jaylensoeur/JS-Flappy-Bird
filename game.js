@@ -19,14 +19,14 @@ scrn.addEventListener("click", (e) => {
       bird.flap();
       break;
     case state.gameOver:
-        if (
-            clickX >= UI.shareBtn.x &&
-            clickX <= UI.shareBtn.x + UI.shareBtn.w &&
-            clickY >= UI.shareBtn.y &&
-            clickY <= UI.shareBtn.y + UI.shareBtn.h
-        ) {
-            share(); // Call capture function for sharing
-        } else {
+        // if (
+        //     clickX >= UI.shareBtn.x &&
+        //     clickX <= UI.shareBtn.x + UI.shareBtn.w &&
+        //     clickY >= UI.shareBtn.y &&
+        //     clickY <= UI.shareBtn.y + UI.shareBtn.h
+        // ) {
+        //     share(); // Call capture function for sharing
+        // } else {
           state.curr = state.getReady;
           bird.speed = 0;
           bird.y = 100;
@@ -34,7 +34,7 @@ scrn.addEventListener("click", (e) => {
           UI.score.curr = 0;
           SFX.played = false;
           break;
-        }
+      //  }
   }
 });
 
@@ -278,11 +278,11 @@ const UI = {
         let shareBtnW = this.shareButton.sprite.width - 50;
         let shareBtnH = this.shareButton.sprite.height;
 
-
-        // Store button area for click detection
-        sctx.drawImage(this.shareButton.sprite, shareBtnX, shareBtnY, shareBtnW, shareBtnH);
-
-        this.shareBtn = { x: shareBtnX, y: shareBtnY, w: shareBtnW, h: shareBtnH };
+        //
+        // // Store button area for click detection
+        // sctx.drawImage(this.shareButton.sprite, shareBtnX, shareBtnY, shareBtnW, shareBtnH);
+        //
+         this.shareBtn = { x: shareBtnX, y: shareBtnY, w: shareBtnW, h: shareBtnH };
         break;
     }
     this.drawScore();
@@ -373,5 +373,5 @@ function draw() {
 setInterval(gameLoop, 20);
 
 function share() {
-  alert("sharing")
+
 }
